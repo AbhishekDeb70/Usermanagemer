@@ -14,51 +14,7 @@ app.use(express.static('public'));
 app.use(morgan("dev"));
 app.engine('hbs',exphbs({extname:'.hbs' }));
 app.set('view engine','hbs');
-app.get('/',(req,res)=>{
-    const currentPage =2;
-    knex.select("*").from('log')
-    .limit(5)
-    .then(rows =>{
-        console.log(rows)
-    res.render("home",{users:rows,currentPage});
-    })
-});
-app.get("/:id", (req, res) => {
-    const page = parseInt (req.params.id);
-    //let lp = 0;
-    let prevpage=page-1;
-    //let nextpage=page;
-    //var per_page = parseInt (req.params.id);
-        knex("log").paginate({
-         perPage: 5,
-         currentPage: page,
-         //lastPage:per_page
-      //isFromStart: true
-         }).then(rows => {
-         console.log("here")
-         console.log(rows.pagination)
-         //console.log(per_page)
-         if(prevpage>=0 && page<=2)
-            {
-              /*  if(prevpage == 1){
-                   const xp=true;
-                   res.render("home",{users:rows.data,currentPage:page+2,xp});
-               }
-              else if(page == 2)
-               {
-                   const np=true;
-                   res.render("home",{users:rows.data,prevpage,np});
-               }*/
-             res.render("home",{users:rows.data,currentPage:page+2,prevpage});
-            }
-            else
-            res.render("home",{user:rows.data,currentPage});
-        })
-    //} 
-  }) 
-app.listen("3000",()=>{
-    console.log("Hello");
-});
+
 app.get("/adduser",(req,res)=>{
     knex('log')
     res.render("add-user");
@@ -99,6 +55,54 @@ app.post("/adduser",[
         console.log(error);
     }
 });
+app.get("/:id", (req, res) => {
+    const page = parseInt (req.params.id);
+    //let lp = 0;
+    let prevpage=page-1;
+    //let nextpage=page;
+    //var per_page = parseInt (req.params.id);
+        knex("log").paginate({
+         perPage: 5,
+         currentPage: page,
+         }).then(rows => {
+         console.log("here")
+         console.log(rows.pagination)
+         //console.log(per_page)
+         let renderData = {}
+         if(rows.pagination.currentPage>=1 && rows.pagination.currentPage<=rows.pagination.lastPage)
+            {
+                if(rows.pagination.currentPage == 1){
+                   const xp=true;
+                    console.log("@@@@@@@@", rows);
+                   renderData = {users:rows.data,currentPage:page,xp}
+               }
+              else if(rows.pagination.currentPage == +rows.pagination.lastPage)
+               {
+                   const np=true;
+                   renderData={users:rows.data,prevpage,np};
+               }
+               console.log("*******", rows);
+            renderData = {users:rows.data,currentPage:page+1,prevpage};
+            }
+            else {}
+            console.log("#########", renderData)
+            res.render("home",{users:rows.data,currentPage:page+1,prevpage});
+            
+        })
+    //} 
+  })
+  app.get('/',(req,res)=>{
+   /* const currentPage =2;
+    knex.select("*").from('log')
+    .limit(5)
+    .then(rows =>{
+        console.log(rows)*/
+    res.redirect("/1");
+}); 
+app.listen("3000",()=>{
+    console.log("Hello");
+});
+
 app.get("/edit-user/:id",(req,res)=>{
     knex('log')
     .where('id',req.params.id)
