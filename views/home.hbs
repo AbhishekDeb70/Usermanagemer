@@ -52,10 +52,13 @@
 </table>
 <div class="page">
   {{#if prevPage}}
-     <a href="/{{prevpage}}" type="button" class="">Prev...</a>
+     <a href="/{{prevpage}}" type="button" class="">Prev...</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/{{currentPage}}" style="pointer-events: none" type="button" >...Next</a>
    {{/if}}
    {{#if nextpage}}
-    <a href="/{{currentPage}}" type="button" >...Next</a>
+     <a href="/{{prevpage}}" type="button" style="pointer-events: none" class="">Prev...</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/{{currentPage}}" type="button" >...Next</a>
+     {{/if}}
+     {{#if midpage}}
+        <a href="/{{prevpage}}" type="button"  class="">Prev...</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/{{currentPage}}" type="button" >...Next</a>
      {{/if}}
 
 </div> 
