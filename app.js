@@ -57,32 +57,29 @@ app.post("/adduser",[
 });
 app.get("/:id", (req, res) => {
     const page = parseInt (req.params.id);
-    //let lp = 0;
     let prevpage=page-1;
     let prevPage=true;
     let nextpage=true;
-    //let nextpage=page;
-    //var per_page = parseInt (req.params.id);
         knex("log").paginate({
          perPage: 5,
-         currentPage: page
+         currentPage: page,
+         isLengthAware: true
          }).then(rows => {
          console.log("here")
          console.log(rows.pagination)
-            
+         console.log(rows.pagination.lastPage)
+         //let y = rows.pagination.lastPage;
             if(rows.pagination.currentPage == 1){
                 console.log("inn");
                 res.render("home",{users:rows.data,nextpage:true,prevPage:false,currentPage:page+1});
-            } else if(rows.pagination.lastPage == rows.pagination.currentPage){
-                //console.log('joooo')
+            } else if(rows.pagination.currentPage == rows.pagination.lastPage){
+                console.log('joooo');
                 res.render("home",{users:rows.data,nextpage:false,prevPage:true,prevpage});
-            }else
-                res.render("home",{users:rows.data,nextpage:true,prevPage:true,currentPage:page+1,prevpage});
-            
-            //res.render("home",{users:rows.data,currentPage:page+1,prevpage});
-            
+            }else{
+                console.log("ppppppp");
+                res.render("home",{users:rows.data,nextpage:true,prevPage:true,currentPage:page+1,prevpage});           
+            }
         })
-    //} 
   })
   app.get('/',(req,res)=>{
    /* const currentPage =2;
