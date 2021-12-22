@@ -60,6 +60,7 @@ app.get("/:id", (req, res) => {
     let prevpage=page-1;
     let prevPage=true;
     let nextpage=true;
+    let midpage=true;
         knex("log").paginate({
          perPage: 5,
          currentPage: page,
@@ -77,7 +78,7 @@ app.get("/:id", (req, res) => {
                 res.render("home",{users:rows.data,nextpage:false,prevPage:true,prevpage});
             }else{
                 console.log("ppppppp");
-                res.render("home",{users:rows.data,nextpage:true,prevPage:true,currentPage:page+1,prevpage});           
+                res.render("home",{users:rows.data,prevPage:false,nextpage:false,midpage:true,currentPage:page+1,prevpage});           
             }
         })
   })
