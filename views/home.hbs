@@ -51,11 +51,11 @@
   </tbody>
 </table>
 <div class="page">
-  {{#if nextpage}}
-    <a href="/{{currentPage}}" type="button" >...Next</a>
-  {{else if prevPage}}
+  {{#if prevPage}}
      <a href="/{{prevpage}}" type="button" class="">Prev...</a>
-  {{else}}
-   <a href="/{{prevpage}}" type="button" class="">Prev...</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/{{currentPage}}" type="button" >...Next</a>  
-  {{/if}}
+   {{/if}}
+   {{#if nextpage}}
+    <a href="/{{currentPage}}" type="button" >...Next</a>
+     {{/if}}
+
 </div> 
