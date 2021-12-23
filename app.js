@@ -15,6 +15,25 @@ app.use(morgan("dev"));
 app.engine('hbs',exphbs({extname:'.hbs' }));
 app.set('view engine','hbs');
 
+app.post("/search",(req,res)=>{
+    const searchTerm=req.body.search;
+    console.log(req.body.search)
+    console.log(typeof searchTerm)
+        knex('log')
+        .where('First_name','like',"%"+searchTerm+"%")
+        .orWhere('Last_name','like',"%"+searchTerm+"%")
+        .orWhere('email','like',"%"+searchTerm+"%")
+        .orWhere('phone','like',"%"+searchTerm+"%")
+        .then(rows=>{
+            console.log(rows)
+           res.render('home',{users:rows})
+        })
+    }
+)
+
+
+
+
 app.get("/adduser",(req,res)=>{
     knex('log')
     res.render("add-user");
@@ -69,15 +88,11 @@ app.get("/:id", (req, res) => {
          console.log("here")
          console.log(rows.pagination)
          console.log(rows.pagination.lastPage)
-         //let y = rows.pagination.lastPage;
             if(rows.pagination.currentPage == 1){
-                console.log("inn");
                 res.render("home",{users:rows.data,nextpage:true,prevPage:false,currentPage:page+1});
             } else if(rows.pagination.currentPage == rows.pagination.lastPage){
-                console.log('joooo');
                 res.render("home",{users:rows.data,nextpage:false,prevPage:true,prevpage});
             }else{
-                console.log("ppppppp");
                 res.render("home",{users:rows.data,prevPage:false,nextpage:false,midpage:true,currentPage:page+1,prevpage});           
             }
         })
@@ -132,7 +147,7 @@ app.post("/edit-update/:id",[
         console.log(error);
     });
 });
-app.get("/:id",(req,res)=>{
+app.get("/del/:id",(req,res)=>{
     knex('log')
     .where('id',req.params.id )
     .del()
